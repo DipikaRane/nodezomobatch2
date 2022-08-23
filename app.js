@@ -85,53 +85,46 @@ app.get('/mealtype/:id',(req,res)=>{
 
 //projection eaxample
 //filter api to get mealTypes and cuisines
-app.get('/filter/:mealId',(req,res)=>{
-    var id=parseInt(req.params.mealId);
-    var sort={cost:1}
-    var limit=100000;
-    var skip=0;
-    var query={"mealTypes.mealtype_id":id};
+app.get('/filter/:mealId',(req,res) => {
+    var id = parseInt(req.params.mealId);
+    var sort = {cost:1}
+    var skip = 0;
+    var limit = 1000000000000
+    var query = {"mealTypes.mealtype_id":id};
     if(req.query.sortKey){
-        var sortKey=req.query.sortKey;
-        if(sortKey>1||sortKey<-1 || sortKey==0){
+        var sortKey = req.query.sortKey
+        if(sortKey>1 || sortKey<-1 || sortKey==0){
             sortKey=1
         }
-        sort={cost:Number(sortKey)}
+        sort = {cost: Number(sortKey)}
     }
     if(req.query.skip && req.query.limit){
-        skip=Number(req.query.skip);
-        limit=Number(req.query.limit);
+        skip = Number(req.query.skip)
+        limit = Number(req.query.limit)
     }
+  
     if(req.query.lcost && req.query.hcost){
-        var lcost=Number(req.query.lcost);
-        var hcost=Number(req.query.hcost);
+        var lcost = Number(req.query.lcost);
+        var hcost = Number(req.query.hcost);
     }
-    if(req.query.cuisines && req.query.lcost && req.query.hcost){
-        query={$and:[{cost:{$gt:lcost,$lt:hcost}}],
-                "cuisines.cuisine_id":Number(req.query.cuisines),
-                "mealTypes.mealtype_id":id,              
-                }
-        // query={"cuisines.cuisine_id":Number(req.query.cuisines),
-        // "mealTypes.mealtype_id":id,}
-    }else if(req.query.cuisines){
-        query={"cuisines.cuisine_id":Number(req.query.cuisines),
-         "mealTypes.mealtype_id":id,}
-    }
-    else if(req.query.lcost && req.query.hcost){
-        query={$and:[{cost:{$gt:lcost,$lt:hcost}}],
+  
+    if(req.query.cuisine && req.query.lcost && req.query.hcost){
+        query = {$and:[{cost:{$gt:lcost,$lt:hcost}}],
+                "cuisines.cuisine_id":Number(req.query.cuisine),
                 "mealTypes.mealtype_id":id}
     }
-    // else if(req.query.lcost && req.query.hcost){
-    //     let lcost=Number(req.query.lcost);
-    //     let hcost=Number(req.query.hcost);
-    //     query={$and:[{cost:{$gt:lcost,$lt:hcost}}],
-    //     "mealTypes.mealtype_id":id}
-    // }
-    db.collection('restdata').find(query).sort(sort).skip(skip).limit(limit).toArray((err,result)=>{
+    else if(req.query.cuisine){
+       query = {"mealTypes.mealtype_id":id,"cuisines.cuisine_id":Number(req.query.cuisine)}
+       // query = {"mealTypes.mealtype_id":id,"cuisines.cuisine_id":{$in:[2,5]}}
+    }else if(req.query.lcost && req.query.hcost){
+        query = {$and:[{cost:{$gt:lcost,$lt:hcost}}],"mealTypes.mealtype_id":id}
+    }
+  
+    db.collection('restdata').find(query).sort(sort).skip(skip).limit(limit).toArray((err,result) =>{
         if(err) throw err;
-        res.send(result);
+        res.send(result) 
     })
-})
+  })
 app.post('/menus',(req,res)=>{
     console.log(req.body);
     // res.send(req.body);
