@@ -82,7 +82,13 @@ app.get('/mealtype/:id',(req,res)=>{
         res.send(result);
     })
 })
-
+app.get('/filterRest/:mealId',(req,res)=>{
+    var id=parseInt(req.params.mealId);
+    db.collection('restaurantdata').find({"mealTypes.mealtype_id":id}).toArray((err,result)=>{
+      if(err) throw err;
+      res.send(result)
+    })
+  })
 //projection eaxample
 //filter api to get mealTypes and cuisines
 app.get('/filter/:mealId',(req,res) => {
