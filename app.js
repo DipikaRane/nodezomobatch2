@@ -84,7 +84,7 @@ app.get('/mealtype/:id',(req,res)=>{
 })
 app.get('/filterRest/:mealId',(req,res)=>{
     var id=parseInt(req.params.mealId);
-    db.collection('restaurantdata').find({"mealTypes.mealtype_id":id}).toArray((err,result)=>{
+    db.collection('restdata').find({"mealTypes.mealtype_id":id}).toArray((err,result)=>{
       if(err) throw err;
       res.send(result)
     })
