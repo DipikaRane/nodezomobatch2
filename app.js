@@ -152,7 +152,7 @@ app.get('/restmenu/:id',(req,res)=>{
     // console.log(id);
     // res.send('ok');
     var id=Number(req.params.id);
-    db.collection('restmenu').find({"menu_id":id}).toArray((err,result)=>{
+    db.collection('restmenu').find({"restaurant_id":id}).toArray((err,result)=>{
         if(err) throw err;
         res.send(result);
     })
