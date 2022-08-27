@@ -141,10 +141,11 @@ app.post('/menus',(req,res)=>{
         res.send(result);
     })
 })
-app.get('/restmenu',(req,res)=>{
-    db.collection('restmenu').find().toArray((err,data)=>{
+app.get('/menuitem/:id',(req,res)=>{
+    var id=Number(req.params.id);
+    db.collection('restmenu').find({"menu_id":id}).toArray((err,result)=>{
         if(err) throw err;
-        res.send(data);
+        res.send(result);
     })
 })
 app.get('/restmenu/:id',(req,res)=>{
