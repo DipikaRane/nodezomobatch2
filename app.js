@@ -141,6 +141,12 @@ app.post('/menus',(req,res)=>{
         res.send(result);
     })
 })
+app.get('/allmenu',(req,res)=>{
+    db.collection('restmenu').find().toArray((err,data)=>{
+        if(err) throw err;
+        res.send(data);
+    })
+})
 app.get('/menuitem/:id',(req,res)=>{
     var id=Number(req.params.id);
     db.collection('restmenu').find({"menu_id":id}).toArray((err,result)=>{
